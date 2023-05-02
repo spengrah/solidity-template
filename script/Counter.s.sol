@@ -14,12 +14,12 @@ contract Deploy is Script {
   /// @notice Override default values, if desired
   function prepare(bool _verbose) public {
     verbose = _verbose;
-   }
+  }
 
   function run() public {
     uint256 privKey = vm.envUint("PRIVATE_KEY");
     address deployer = vm.rememberKey(privKey);
-    vm.startBroadcast(deployer); 
+    vm.startBroadcast(deployer);
 
     counter = new Counter{ salt: SALT}();
 
