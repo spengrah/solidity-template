@@ -20,7 +20,7 @@ contract CounterTest is Deploy, Test {
     // fork = vm.createSelectFork(vm.rpcUrl("mainnet"), BLOCK_NUMBER);
 
     // deploy via the script
-    prepare(true);
+    prepare(false);
     run();
   }
 }
