@@ -5,7 +5,7 @@ import { Test, console2 } from "forge-std/Test.sol";
 import { Counter } from "../src/Counter.sol";
 import { Deploy, DeployPrecompiled } from "../script/Counter.s.sol";
 
-contract CounterTest is DeployPrecompiled, Test {
+contract CounterTest is Deploy, Test {
   /// @dev Inherit from DeployPrecompiled instead of Deploy if working with pre-compiled contracts
 
   /// @dev variables inhereted from Deploy script

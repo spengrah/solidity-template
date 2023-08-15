@@ -13,7 +13,7 @@ interface ImmutableCreate2Factory {
 
 contract Deploy is Script {
   Counter public counter;
-  bytes32 public SALT = bytes32(abi.encode(0x4a75));
+  bytes32 public SALT = bytes32(abi.encode("lets add some salt to these eggs"));
 
   // default values
   bool internal _verbose = true;
