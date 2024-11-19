@@ -31,5 +31,7 @@ contract ContractTest is Test {
 }
 
 contract UnitTests is ContractTest {
-  function test_empty() public view { }
+  function test_doSomething() public view {
+    cntrct.doSomething();
+  }
 }
