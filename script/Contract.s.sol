@@ -2,7 +2,7 @@
 pragma solidity ^0.8.18;
 
 import { Script, console2 } from "forge-std/Script.sol";
-import { Counter } from "../src/Counter.sol";
+import { Contract } from "../src/Contract.sol";
 
 interface ImmutableCreate2Factory {
   function create2(bytes32 salt, bytes calldata initializationCode)
@@ -12,32 +12,34 @@ interface ImmutableCreate2Factory {
 }
 
 contract Deploy is Script {
-  Counter public counter;
+  Contract public cntrct;
   bytes32 public SALT = bytes32(abi.encode("lets add some salt to these eggs"));
 
   // default values
   bool internal _verbose = true;
+  // init other variables
 
   /// @dev Override default values, if desired
   function prepare(bool verbose) public {
     _verbose = verbose;
+    // set other variables
   }
 
   /// @dev Set up the deployer via their private key from the environment
-  function deployer() public returns (address) {
+  function _deployer() internal returns (address) {
     uint256 privKey = vm.envUint("PRIVATE_KEY");
     return vm.rememberKey(privKey);
   }
 
   function _log(string memory prefix) internal view {
     if (_verbose) {
-      console2.log(string.concat(prefix, "Counter:"), address(counter));
+      console2.log(string.concat(prefix, "Contract:"), address(cntrct));
     }
   }
 
   /// @dev Deploy the contract to a deterministic address via forge's create2 deployer factory.
-  function run() public virtual {
-    vm.startBroadcast(deployer());
+  function run() public virtual returns (Contract) {
+    vm.startBroadcast(_deployer());
 
     /**
      * @dev Deploy the contract to a deterministic address via forge's create2 deployer factory, which is at this
@@ -47,11 +49,13 @@ contract Deploy is Script {
      *       never differs regardless of where its being compiled
      *    2. The provided salt, `SALT`
      */
-    counter = new Counter{ salt: SALT}(/* insert constructor args here */);
+    cntrct = new Contract{ salt: SALT }( /* insert constructor args here */ );
 
     vm.stopBroadcast();
 
     _log("");
+
+    return cntrct;
   }
 }
 
@@ -59,17 +63,19 @@ contract Deploy is Script {
 contract DeployPrecompiled is Deploy {
   /// @dev Update SALT and default values in Deploy contract
 
-  function run() public override {
-    vm.startBroadcast(deployer());
+  function run() public override returns (Contract) {
+    vm.startBroadcast(_deployer());
 
     bytes memory args = abi.encode( /* insert constructor args here */ );
 
     /// @dev Load and deploy pre-compiled ir-optimized bytecode.
-    counter = Counter(deployCode("optimized-out/Counter.sol/Counter.json", args));
+    cntrct = Contract(deployCode("optimized-out/Contract.sol/Contract.json", args));
 
     vm.stopBroadcast();
 
     _log("Precompiled ");
+
+    return cntrct;
   }
 }
 

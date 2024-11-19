@@ -87,14 +87,14 @@ jobs:
       # is why we use both in this way.
       - name: Post coverage report
         if: github.event_name == 'pull_request' # This action fails when ran outside of a pull request.
-        uses: romeovs/lcov-reporter-action@v0.3.1
+        uses: romeovs/lcov-reporter-action@v0.4.0
         with:
           delete-old-comments: true
           lcov-file: ./lcov.info
           github-token: ${{ secrets.GITHUB_TOKEN }} # Adds a coverage summary comment to the PR.
 
       - name: Verify minimum coverage
-        uses: zgosalvez/github-actions-report-lcov@v2
+        uses: zgosalvez/github-actions-report-lcov@v3
         with:
           coverage-files: ./lcov.info
           minimum-coverage: 95 # Set coverage threshold.
